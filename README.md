@@ -4,6 +4,8 @@ The **Grav Pages as Data** for [Grav](http://github.com/getgrav/grav) provides a
 
 ## Installation
 
+The simplest way to install this plugin is via the Grav Package Manager (GPM) through your system's Terminal (also called the command line). From the root of your Grav install type:
+
 ```
 bin/gpm install page-as-data
 ```
