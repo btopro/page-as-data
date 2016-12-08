@@ -15,10 +15,15 @@ class pageAsDataPlugin extends Plugin
     {
         // hijack output so we can deliver as a different format
         // if this value isset
-        if (isset($_GET['return-as']) && in_array($_GET['return-as'], array('json', 'xml', 'yaml'))) {
+        $accept = $_SERVER['HTTP_ACCEPT'];
+        if (strlen($accept) > 0 && in_array($accept, array('application/json', 'application/xml', 'application/yaml')) == true) {
             $this->enable([
-                    'onPageInitialized' => ['deliverFormatAs', 0]
-                ]);
+                'onPageInitialized' => ['deliverFormatAs', 0]
+            ]);
+        }else if(isset($_GET['return-as']) && in_array($_GET['return-as'], array('json', 'xml', 'yaml'))) {
+            $this->enable([
+                'onPageInitialized' => ['deliverFormatAs', 0]
+            ]);
         }
     }
 
@@ -27,7 +32,22 @@ class pageAsDataPlugin extends Plugin
         /**
          * @var \Grav\Common\Page\Page $page
          */
-        $format = $_GET['return-as'];
+        $accept = $_SERVER['HTTP_ACCEPT'];
+        if (strlen($accept) > 0 && in_array($accept, array('application/json', 'application/xml', 'application/yaml')) == true) {
+          switch ($accept) {
+              case 'application/json':
+                  $format = 'json';
+              break;
+              case 'application/yaml':
+                  $format = 'yaml';
+              break;
+              case 'application/xml':
+                  $format = 'xml';
+              break;
+          }
+        } else {
+          $format = $_GET['return-as'];
+        }
         $page = $this->grav['page'];
         $collection = $page->collection('content', false);
         $pageArray = $page->toArray();
